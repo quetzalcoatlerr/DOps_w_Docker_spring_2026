@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: dops-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: REQUEST_ORIGIN
+        fromService:
+          name: dops-frontend
+          type: web
+          property: host
+      - key: REDIS_HOST
+        fromService:
+          name: dops-redis
+          type: redis
+          property: host
+
+  - type: web
+    name: dops-frontend
+    env: docker
+    rootDir: frontend
+    plan: free
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        fromService:
+          name: dops-backend
+          type: web
+          property: host
+
+  - type: redis
+    name: dops-redis
+    plan: free
